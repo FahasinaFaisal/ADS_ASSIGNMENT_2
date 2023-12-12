@@ -109,8 +109,8 @@ plt.show()
 df_cleaned = pd.read_csv(cleaned_data_path)
 
 filtered_population = df_cleaned[
-    ((df_cleaned['Country Name'] == 'Argentina') | (df_cleaned['Country Name'] == 'Japan') |
-     (df_cleaned['Country Name'] == 'Canada') | (df_cleaned['Country Name'] == 'Uganda')) &
+    ((df_cleaned['Country Name'] == 'Argentina') | (df_cleaned['Country Name'] == 'Germany') |
+     (df_cleaned['Country Name'] == 'Japan') |(df_cleaned['Country Name'] == 'Canada') | (df_cleaned['Country Name'] == 'Uganda')) &
     ((df_cleaned['Year'] == 1975) | (df_cleaned['Year'] == 1985) | 
      (df_cleaned['Year'] == 1995) | (df_cleaned['Year'] == 2005))]
 
@@ -149,12 +149,14 @@ plt.show()
 # Line graphs for working age people and dependency age people
 # Filter data for specific countries
 age_argentina = df_cleaned[df_cleaned['Country Name'] == "Argentina"]
+age_germany = df_cleaned[df_cleaned['Country Name'] == "Germany"]
 age_japan = df_cleaned[df_cleaned['Country Name'] == "Japan"]
-age_sweden = df_cleaned[df_cleaned['Country Name'] == "Sweden"]
+age_sweden = df_cleaned[df_cleaned['Country Name'] == "Canada"]
 age_uganda = df_cleaned[df_cleaned['Country Name'] == "Uganda"]
 
 # Plotting the first line graph Dependency age 
 plt.plot(age_argentina["Year"], age_argentina["SP.POP.DPND"], label='Argentina')
+plt.plot(age_germany["Year"], age_germany["SP.POP.DPND"], label='Germany')
 plt.plot(age_japan["Year"], age_japan["SP.POP.DPND"], label='Japan')
 plt.plot(age_sweden["Year"], age_sweden["SP.POP.DPND"], label='Canada')
 plt.plot(age_uganda["Year"], age_uganda["SP.POP.DPND"], label='Uganda')
@@ -171,8 +173,9 @@ plt.show()
 
 # Second Line graph for Population ages 15-64 (% of total population)
 plt.plot(age_argentina["Year"], age_argentina["SP.POP.1564.TO.ZS"], label='Argentina')
+plt.plot(age_germany["Year"], age_germany["SP.POP.1564.TO.ZS"], label='Germany')
 plt.plot(age_japan["Year"], age_japan["SP.POP.1564.TO.ZS"], label='Japan')
-plt.plot(age_sweden["Year"], age_sweden["SP.POP.1564.TO.ZS"], label='Sweden')
+plt.plot(age_sweden["Year"], age_sweden["SP.POP.1564.TO.ZS"], label='Canada')
 plt.plot(age_uganda["Year"], age_uganda["SP.POP.1564.TO.ZS"], label='Uganda')
 
 # Adding labels and title

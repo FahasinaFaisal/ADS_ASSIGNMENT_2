@@ -21,7 +21,7 @@ def load_dataset(file_path):
 
 # Define indicator codes, indicator map, and country names
 indicator_codes = ['Country Name', 'Country Code', 'Year', 'SP.POP.TOTL.MA.ZS', 'SP.POP.TOTL.FE.ZS', 'SP.POP.GROW',
-                 'SP.POP.DPND.YG', 'SP.POP.DPND.OL', 'SP.POP.DPND', 'SP.DYN.CDRT.IN', 'SP.DYN.CBRT.IN', 'SP.ADO.TFRT',
+                 'SP.POP.DPND.YG', 'SP.POP.DPND.OL', 'SP.POP.DPND', 'SP.DYN.CDRT.IN', 'SP.DYN.CBRT.IN', 
                  'SP.POP.1564.TO.ZS','SH.DTH.IMRT']
 
 indicator_map = {
@@ -33,25 +33,17 @@ indicator_map = {
     "SP.POP.DPND": "Age dependency ratio (% of working-age population)",
     "SP.DYN.CDRT.IN": "Death rate, crude (per 1,000 people)",
     "SP.DYN.CBRT.IN": "Birth rate, crude (per 1,000 people)",
-    "SP.ADO.TFRT": "Adolescent fertility rate (births per 1,000 women ages 15-19)",
     "SP.POP.1564.TO.ZS":"Population ages 15-64 (% of total population)",
     "SH.DTH.IMRT":"Number of infant deaths"
 }
 
 country_names = {
-    "AUS": "Australia",
-    "BHR": "Bahrain",
     "CAN": "Canada",
     "DEU": "Germany",
     "ARG": "Argentina",
-    "GRD": "Grenada",
     "JPN": "Japan",
-    "LBR": "Liberia",
-    "MEX": "Mexico",
-    "PAN": "Panama",
     "SWE": "Sweden",
-    "UGA": "Uganda",
-    "ZWE": "Zimbabwe"
+    "UGA": "Uganda"
 }
 
 # Load and melt the dataset
@@ -122,24 +114,10 @@ filtered_population = df_cleaned[
     ((df_cleaned['Year'] == 1975) | (df_cleaned['Year'] == 1985) | 
      (df_cleaned['Year'] == 1995) | (df_cleaned['Year'] == 2005))]
 
-filtered_population = filtered_population[["Country Name", "Year", "SP.POP.GROW","SP.DYN.CBRT.IN","SH.DTH.IMRT"]]
+filtered_population = filtered_population[["Country Name", "Year", "SP.DYN.CBRT.IN","SH.DTH.IMRT"]]
 
-# Pivot the data for first bar plot
-pivoted_population_growth_df = filtered_population.pivot(index='Country Name', columns='Year', values='SP.POP.GROW').reset_index()
 
-# Plotting the bar graph for population growth
-ax = pivoted_population_growth_df.plot(kind='bar', x='Country Name', y=[1975, 1985, 1995, 2005], rot=30, legend=True)
-plt.xticks(rotation=30, horizontalalignment="center")
-
-# Adding labels and title for population growth
-ax.set_ylabel('Population Growth (annual %)')
-ax.set_xlabel('Country')
-plt.title('Population Growth Annually')
-
-# Show the plot
-plt.show()
-
-# Pivot the data for second bar plot
+# Pivot the data for first bar graph about birth rate per year
 pivoted_birth_rate_df = filtered_population.pivot(index='Country Name', columns='Year', values='SP.DYN.CBRT.IN').reset_index()
 
 # Plotting the bar graph for birth rate
@@ -149,13 +127,12 @@ plt.xticks(rotation=30, horizontalalignment="center")
 # Adding labels and title for birth rate
 ax.set_ylabel('Birth Rate (crude per 1,000 people)')
 ax.set_xlabel('Country')
-plt.title('Crude Birth Rate Per 1,000 People')
+plt.title('Birth Rate Per 1,000 People')
 
 # Show the plot
 plt.show()
 
-# Bar plot for infant death
-# Pivot the data for third bar plot
+# Bar graph for infant death
 pivoted_infant_death_df = filtered_population.pivot(index='Country Name', columns='Year', values='SH.DTH.IMRT').reset_index()
 
 # Plotting the bar graph for infant death
@@ -169,22 +146,21 @@ plt.title('Infant Death Rate')
 # Show the plot
 plt.show()
 
-# Line graph for Age dependency ratio (% of working-age population)
+# Line graphs for working age people and dependency age people
 # Filter data for specific countries
-working_age_argentina = df_cleaned[df_cleaned['Country Name'] == "Argentina"]
-working_age_japan = df_cleaned[df_cleaned['Country Name'] == "Japan"]
-working_age_sweden = df_cleaned[df_cleaned['Country Name'] == "Sweden"]
-working_age_uganda = df_cleaned[df_cleaned['Country Name'] == "Uganda"]
+age_argentina = df_cleaned[df_cleaned['Country Name'] == "Argentina"]
+age_japan = df_cleaned[df_cleaned['Country Name'] == "Japan"]
+age_sweden = df_cleaned[df_cleaned['Country Name'] == "Sweden"]
+age_uganda = df_cleaned[df_cleaned['Country Name'] == "Uganda"]
 
-# Plotting
-plt.plot(working_age_argentina["Year"], working_age_argentina["SP.POP.DPND"], label='Argentina')
-plt.plot(working_age_japan["Year"], working_age_japan["SP.POP.DPND"], label='Japan')
-plt.plot(working_age_sweden["Year"], working_age_sweden["SP.POP.DPND"], label='Canada')
-plt.plot(working_age_uganda["Year"], working_age_uganda["SP.POP.DPND"], label='Uganda')
+# Plotting the first line graph Dependency age 
+plt.plot(age_argentina["Year"], age_argentina["SP.POP.DPND"], label='Argentina')
+plt.plot(age_japan["Year"], age_japan["SP.POP.DPND"], label='Japan')
+plt.plot(age_sweden["Year"], age_sweden["SP.POP.DPND"], label='Canada')
+plt.plot(age_uganda["Year"], age_uganda["SP.POP.DPND"], label='Uganda')
 
 # Adding labels and title
 plt.xlabel('Year')
-plt.ylabel('Age Dependency Ratio (% of Working-Age Population)')
 plt.title('Age Dependency Ratio Comparison')
 
 # Adding legend
@@ -193,11 +169,11 @@ plt.legend()
 # Display the plot
 plt.show()
 
-# Line graph for Population ages 15-64 (% of total population)
-plt.plot(working_age_argentina["Year"], working_age_argentina["SP.POP.1564.TO.ZS"], label='Argentina')
-plt.plot(working_age_japan["Year"], working_age_japan["SP.POP.1564.TO.ZS"], label='Japan')
-plt.plot(working_age_sweden["Year"], working_age_sweden["SP.POP.1564.TO.ZS"], label='Sweden')
-plt.plot(working_age_uganda["Year"], working_age_uganda["SP.POP.1564.TO.ZS"], label='Uganda')
+# Second Line graph for Population ages 15-64 (% of total population)
+plt.plot(age_argentina["Year"], age_argentina["SP.POP.1564.TO.ZS"], label='Argentina')
+plt.plot(age_japan["Year"], age_japan["SP.POP.1564.TO.ZS"], label='Japan')
+plt.plot(age_sweden["Year"], age_sweden["SP.POP.1564.TO.ZS"], label='Sweden')
+plt.plot(age_uganda["Year"], age_uganda["SP.POP.1564.TO.ZS"], label='Uganda')
 
 # Adding labels and title
 plt.xlabel('Year')

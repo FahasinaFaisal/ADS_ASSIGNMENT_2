@@ -10,9 +10,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Define file paths
-population_data_path = 'C:\\Users\\USER\\Desktop\\ADS\\Assignment_2\\Dataset\\population.csv'
-pivoted_data_path = 'C:\\Users\\USER\\Desktop\\ADS\\Assignment_2\\Dataset\\PivotedDataset.csv'
-cleaned_data_path = 'C:\\Users\\USER\\Desktop\\ADS\\Assignment_2\\Dataset\\CleanedDataset.csv'
+population_data_path = 'Dataset/population.csv'
+pivoted_data_path = 'Dataset/PivotedDataset.csv'
+cleaned_data_path = 'Dataset/CleanedDataset.csv'
 
 # Function to load dataset
 def load_dataset(file_path):
@@ -21,19 +21,16 @@ def load_dataset(file_path):
 
 # Define indicator codes, indicator map, and country names
 indicator_codes = ['Country Name', 'Country Code', 'Year', 'SP.POP.TOTL.MA.ZS', 'SP.POP.TOTL.FE.ZS', 'SP.POP.GROW',
-                 'SP.POP.DPND.YG', 'SP.POP.DPND.OL', 'SP.POP.DPND', 'SP.DYN.CDRT.IN', 'SP.DYN.CBRT.IN', 
-                 'SP.POP.1564.TO.ZS','SH.DTH.IMRT']
+                  'SP.POP.DPND', 'SP.DYN.CDRT.IN', 'SP.DYN.CBRT.IN', 'SP.POP.1564.TO.ZS','SH.DTH.IMRT']
 
 indicator_map = {
-    "SP.POP.TOTL.MA.ZS": "Population, male (% of total population)",
-    "SP.POP.TOTL.FE.ZS": "Population, female (% of total population)",
-    "SP.POP.GROW": "Population growth (annual %)",
-    "SP.POP.DPND.YG": "Age dependency ratio, young (% of working-age population)",
-    "SP.POP.DPND.OL": "Age dependency ratio, old (% of working-age population)",
-    "SP.POP.DPND": "Age dependency ratio (% of working-age population)",
-    "SP.DYN.CDRT.IN": "Death rate, crude (per 1,000 people)",
-    "SP.DYN.CBRT.IN": "Birth rate, crude (per 1,000 people)",
-    "SP.POP.1564.TO.ZS":"Population ages 15-64 (% of total population)",
+    "SP.POP.TOTL.MA.ZS":"Male population ",
+    "SP.POP.TOTL.FE.ZS":"Female population",
+    "SP.POP.GROW": "Population growth",
+    "SP.POP.DPND": "Dependency age ratio",
+    "SP.DYN.CDRT.IN": "Death rate",
+    "SP.DYN.CBRT.IN": "Birth rate",
+    "SP.POP.1564.TO.ZS":"Working age population",
     "SH.DTH.IMRT":"Number of infant deaths"
 }
 
@@ -80,9 +77,9 @@ print(statistical_df.describe())
 
 # Create DataFrames for specific countries
 df_argentina = cleaned_df[cleaned_df["Country Name"] == "Argentina"]
-df_japan = cleaned_df[cleaned_df["Country Name"] == "Japan"]
-df_sweden = cleaned_df[cleaned_df["Country Name"] == "Sweden"]
-df_canada = cleaned_df[cleaned_df["Country Name"] == "Canada"]
+df_germany = cleaned_df[cleaned_df["Country Name"] == "Germany"]
+df_uganda = cleaned_df[cleaned_df["Country Name"] == "Uganda"]
+
 
 # Correlation Matrix and Heat map for Argentina
 correlation_matrix_argentina = df_argentina.corr(numeric_only=True).rename(columns=indicator_map).rename(index=indicator_map)
@@ -91,19 +88,20 @@ sns.heatmap(correlation_matrix_argentina, annot=True, fmt=".1g", vmax=1, vmin=0)
 plt.title('Correlation Matrix for Argentina')
 plt.show()
 
-# Correlation Matrix and Heat map for Japan
-correlation_matrix_japan = df_japan.corr(numeric_only=True).rename(columns=indicator_map).rename(index=indicator_map)
+# Correlation Matrix and Heat map for Germany
+correlation_matrix_germany = df_germany.corr(numeric_only=True).rename(columns=indicator_map).rename(index=indicator_map)
 plt.figure(figsize=(10, 10))
-sns.heatmap(correlation_matrix_japan, annot=True, fmt=".1g", vmax=1, vmin=0)
-plt.title('Correlation Matrix for Japan')
+sns.heatmap(correlation_matrix_germany, annot=True, fmt=".1g", vmax=1, vmin=0)
+plt.title('Correlation Matrix for Germany')
 plt.show()
 
-# Correlation Matrix and Heat map for Canada
-correlation_matrix_canada = df_canada.corr(numeric_only=True).rename(columns=indicator_map).rename(index=indicator_map)
+# Correlation Matrix and Heat map for Uganda
+correlation_matrix_uganda = df_uganda.corr(numeric_only=True).rename(columns=indicator_map).rename(index=indicator_map)
 plt.figure(figsize=(10, 10))
-sns.heatmap(correlation_matrix_canada, annot=True, fmt=".1g", vmax=1, vmin=0)
-plt.title('Correlation Matrix for Canada')
+sns.heatmap(correlation_matrix_uganda, annot=True, fmt=".1g", vmax=1, vmin=0)
+plt.title('Correlation Matrix for Uganda')
 plt.show()
+
 
 # Bar graphs
 # Filtering for specific countries and years
@@ -164,7 +162,8 @@ plt.plot(age_uganda["Year"], age_uganda["SP.POP.DPND"], label='Uganda')
 
 # Adding labels and title
 plt.xlabel('Year')
-plt.title('Age Dependency Ratio Comparison')
+plt.ylabel('Population of dependency age group ')
+plt.title('Dependency Age Group Comparison')
 
 # Adding legend
 plt.legend()

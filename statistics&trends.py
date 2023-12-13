@@ -82,6 +82,7 @@ print(statistical_df.describe())
 df_argentina = cleaned_df[cleaned_df["Country Name"] == "Argentina"]
 df_japan = cleaned_df[cleaned_df["Country Name"] == "Japan"]
 df_sweden = cleaned_df[cleaned_df["Country Name"] == "Sweden"]
+df_canada = cleaned_df[cleaned_df["Country Name"] == "Canada"]
 
 # Correlation Matrix and Heat map for Argentina
 correlation_matrix_argentina = df_argentina.corr(numeric_only=True).rename(columns=indicator_map).rename(index=indicator_map)
@@ -97,11 +98,11 @@ sns.heatmap(correlation_matrix_japan, annot=True, fmt=".1g", vmax=1, vmin=0)
 plt.title('Correlation Matrix for Japan')
 plt.show()
 
-# Correlation Matrix and Heat map for Sweden
-correlation_matrix_sweden = df_sweden.corr(numeric_only=True).rename(columns=indicator_map).rename(index=indicator_map)
+# Correlation Matrix and Heat map for Canada
+correlation_matrix_canada = df_canada.corr(numeric_only=True).rename(columns=indicator_map).rename(index=indicator_map)
 plt.figure(figsize=(10, 10))
-sns.heatmap(correlation_matrix_sweden, annot=True, fmt=".1g", vmax=1, vmin=0)
-plt.title('Correlation Matrix for Sweden')
+sns.heatmap(correlation_matrix_canada, annot=True, fmt=".1g", vmax=1, vmin=0)
+plt.title('Correlation Matrix for Canada')
 plt.show()
 
 # Bar graphs

@@ -8,6 +8,8 @@ Created on Mon Dec 11 17:07:45 2023
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from scipy.stats import skew
+from scipy.stats import kurtosis
 
 # Define file paths
 population_data_path = 'Dataset/population.csv'
@@ -43,42 +45,81 @@ country_names = {
     "UGA": "Uganda"
 }
 
-# Load and melt the dataset
 def load_and_melt_dataset(file_path):
+    """
+    Load the dataset from a CSV file and melt it.
+
+    Parameters:
+    - file_path (str): Path to the CSV file.
+
+    Returns:
+    - pd.DataFrame: Melted dataset with columns 'Country Name', 'Country Code', 'Indicator Name',
+      'Indicator Code', 'Year', and 'Value'.
+    """
     dataset = load_dataset(file_path)
     melted_df = dataset.melt(id_vars=['Country Name', 'Country Code', 'Indicator Name', 'Indicator Code'],
                              var_name='Year', value_name='Value')
     return melted_df
 
+# Example usage
 melted_population_df = load_and_melt_dataset(population_data_path)
 
-# Pivot the table to have Indicator Codes as columns
-pivoted_df = melted_population_df.pivot_table(index=['Country Name', 'Country Code', 'Year'], columns='Indicator Code',
-                                   values='Value').reset_index()
 
-# Fill NaN values with 0
-pivoted_df.fillna(0, inplace=True)
+def pivot_and_filter_dataset(melted_df, indicator_codes):
+    """
+    Pivot the melted dataset, fill NaN values with 0, and filter columns based on indicator codes.
 
-# Save the pivoted DataFrame to a CSV file
-pivoted_df.to_csv(pivoted_data_path, index=False)
+    Parameters:
+    - melted_df (pd.DataFrame): Melted dataset.
+    - indicator_codes (list): List of indicator codes to keep.
 
-# Filter columns based on indicator codes
-filtered_columns = [col for col in pivoted_df.columns if col in indicator_codes]
-filtered_df = pivoted_df[filtered_columns]
+    Returns:
+    - pd.DataFrame: Pivoted, filled, and filtered dataset.
+    """
+    # Pivot the table to have Indicator Codes as columns
+    pivoted_df = melted_df.pivot_table(index=['Country Name', 'Country Code', 'Year'], columns='Indicator Code',
+                                       values='Value').reset_index()
+
+    # Fill NaN values with 0
+    pivoted_df.fillna(0, inplace=True)
+
+    # Filter columns based on indicator codes
+    filtered_columns = [col for col in pivoted_df.columns if col in indicator_codes]
+    filtered_df = pivoted_df[filtered_columns]
+
+    return filtered_df
+
+# Example usage
+melted_population_df = load_and_melt_dataset(population_data_path)
+filtered_df = pivot_and_filter_dataset(melted_population_df, indicator_codes)
+filtered_df.to_csv(cleaned_data_path, index=False)
+
 
 # Clean the transformed dataset
 # Fill missing values with the mean of the column
 cleaned_df = filtered_df.fillna(filtered_df.mean(numeric_only=True))
 cleaned_df.to_csv(cleaned_data_path)
 
-# Apply statistical methods on the cleaned dataset
-statistical_df = cleaned_df.drop(['Year', 'Country Name'], axis='columns')
-print(statistical_df.describe())
+
+
 
 # Create DataFrames for specific countries
 df_argentina = cleaned_df[cleaned_df["Country Name"] == "Argentina"]
 df_germany = cleaned_df[cleaned_df["Country Name"] == "Germany"]
 df_uganda = cleaned_df[cleaned_df["Country Name"] == "Uganda"]
+
+
+# Apply statistical methods on the cleaned dataset
+statistical_df = cleaned_df.drop(['Year', 'Country Name'], axis='columns')
+print(statistical_df.describe())
+
+stats_skew = skew(df_argentina["SP.POP.GROW"])
+print(stats_skew)
+
+stats_kurtosis = kurtosis(df_argentina["SP.POP.GROW"])
+print(stats_kurtosis)
+
+
 
 
 # Correlation Matrix and Heat map for Argentina
